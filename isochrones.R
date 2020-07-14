@@ -29,16 +29,23 @@ proj4string(cents)
 
 n <- dim(cents)[1]
 
+########################
+#
+# Calculate Isochrones using OpenRouteService API.
+# API allows 5 points at once - first "coordinates" line calculates isochrones in groups of 5, second calls individual points. if running ind. points must also change
+# to append attributes for only one point under "add in ID and coordinate atttributes" below and the incrementing of i at the end of the while loop
+# Script will fail if API limits reached and must be restarted at the same point after 24 hours
+#
+#######################
+
 i <- 1
 while(i<n+1){
 	print(i)
 	
-	# API allows 5 points at once - first line calculates isochrones in groups of 5, 
-	# second line calls individual points. if running ind. points must also change
-	# to append attributes for only one point under "add in ID and coordinate atttributes" below
-	# and the incrementing of i at the end
-
+	#for 5 points
 	coordinates <- list(c(cents$coords.x1[i], cents$coords.x2[i]), c(cents$coords.x1[i+1], cents$coords.x2[i+1]), c(cents$coords.x1[i+2], cents$coords.x2[i+2]), c(cents$coords.x1[i+3], cents$coords.x2[i+3]), c(cents$coords.x1[i+4], cents$coords.x2[i+4]))
+	
+	#for 1 point
 	#coordinates <- c(cents$coords.x1[i], cents$coords.x2[i])
 
 	x <- ors_isochrones(coordinates, profile = "foot-walking", range = 15*60)
